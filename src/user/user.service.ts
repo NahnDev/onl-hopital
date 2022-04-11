@@ -15,7 +15,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const userDoc = new this.userModel({});
+    const userDoc = new this.userModel(createUserDto);
     await userDoc.save();
     const user = userDoc.toJSON();
     return user;
