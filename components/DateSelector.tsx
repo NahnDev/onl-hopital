@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Pressable, View, StyleSheet } from "react-native";
+import {
+  Pressable,
+  View,
+  StyleSheet,
+  ViewStyle,
+  StyleProp,
+} from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -12,20 +18,16 @@ export default function DateSelector(props: {
   value?: Date;
   label: string;
   onChange?: (date: Date) => any;
+  style?: StyleProp<ViewStyle>;
 }) {
-  const {
-    borderDashed,
-    roundFull,
-    textCenter,
-    padding,
-    margin,
-    opacity,
-    border,
-    size1,
-    bold,
-    size2,
-    rounded,
-  } = useStyles();
+  //#region style
+  const { size1, size2, textCenter, bold } = useStyles();
+  const { rounded, roundedFull, opacity } = useStyles();
+  const { margin, padding, marginHorizontal, paddingHorizontal } = useStyles();
+  const { border, borderDashed } = useStyles();
+  const { label, input } = useStyles();
+  //#endregion
+
   const { display, container } = useCusStyle();
   const [date, setDate] = useState<Date | null | undefined>(props.value);
   const [datePickerShow, setDatePickerShow] = useState(false);
@@ -39,18 +41,24 @@ export default function DateSelector(props: {
   return (
     <>
       <Pressable onPress={() => setDatePickerShow(true)}>
-        <View style={[margin]}>
-          <Text style={[size1, bold]}>{props.label}</Text>
-          <View style={[border, margin, rounded, { borderColor: overlay }]}>
+        <View style={[props.style]}>
+          <Text style={[label]}>{props.label}</Text>
+          <View style={[input]}>
             {date ? (
-              <Text style={[textCenter, roundFull, padding, size1]}>
+              <Text style={[textCenter, roundedFull, padding, size1]}>
                 {date.toLocaleDateString("vi-VN", {
                   dateStyle: "long",
                 })}
               </Text>
             ) : (
               <Text
-                style={[padding, textCenter, borderDashed, roundFull, opacity]}
+                style={[
+                  padding,
+                  textCenter,
+                  borderDashed,
+                  roundedFull,
+                  opacity,
+                ]}
               >
                 {props.label}
               </Text>

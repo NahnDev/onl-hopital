@@ -1,5 +1,17 @@
+import { GENDER } from "../enum/GENDER";
 import { USER_ROLE } from "../enum/USER_ROLE";
 
+export type LoginDto = {
+  email: string;
+  password: string;
+};
+
+export type TokenType = {
+  accessToken: string;
+  expires: number;
+};
+
+// user defined type
 export type UserType = {
   _id: string;
   email: string;
@@ -10,11 +22,7 @@ export type UserType = {
 };
 export type CreateUserDto = Pick<UserType, "email" | "name" | "password">;
 
-export type TokenType = {
-  accessToken: string;
-  expires: number;
-};
-
+//  Doctor defined
 export type DoctorType = {
   _id: string;
   name: string;
@@ -29,6 +37,7 @@ export type DoctorType = {
 };
 export type DoctorRef = Pick<DoctorType, "_id" | "name">;
 
+// profile define
 export type ProfileType = {
   _id: string;
   name: string;
@@ -36,7 +45,7 @@ export type ProfileType = {
 
   phone?: string;
   age?: number;
-  sex?: "MALE" | "FEMALE";
+  sex?: GENDER;
 
   address?: string;
   histories: HistoryType[];
@@ -44,14 +53,16 @@ export type ProfileType = {
 export type ProfileRef = Pick<ProfileType, "_id" | "name">;
 export type CreateProfileDto = Pick<
   ProfileType,
-  "address" | "age" | "name" | "phone" | "sex"
+  "address" | "age" | "name" | "phone" | "sex" | "image"
 >;
 
+// history define
 export type HistoryType = {
   _id: string;
   at: number;
 };
 
+// book define
 export type BookingType = {
   _id: string;
   date: number;
@@ -60,7 +71,7 @@ export type BookingType = {
 
   doctor: DoctorRef;
   profile: ProfileRef;
-  service: ServiceRef[];
+  services: ServiceRef[];
 };
 export type BookingRef = Pick<BookingType, "_id">;
 export type CreateAppointmentDto = Pick<
@@ -68,16 +79,18 @@ export type CreateAppointmentDto = Pick<
   "date" | "note" | "timePeriod"
 > & {
   profile: string;
-  service?: string[];
+  services: string[];
   doctor: string;
 };
 
+// Service define
 export type ServiceType = {
   _id: string;
   name: string;
 };
 export type ServiceRef = Pick<ServiceType, "_id" | "name">;
 
+// time period
 export class TimePeriod {
   constructor(
     public start: { h: number; m: number },

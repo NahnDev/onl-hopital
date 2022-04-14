@@ -10,7 +10,7 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
   const colorSchema = useColorScheme();
   const {
     screen,
-    text_reverse,
+    textReverse: text_reverse,
     justifyCenter,
     textCenter,
     header,

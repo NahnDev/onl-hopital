@@ -18,8 +18,8 @@ export default function AppointmentItem(props: {
     justifyStart,
     marginHorizontal,
     flex,
-    alignCenter,
-    alignStart,
+    itemCenter: alignCenter,
+    itemStart: alignStart,
     textCenter,
     bold,
   } = useStyles();
@@ -33,7 +33,9 @@ export default function AppointmentItem(props: {
       <ListItem.Swipeable disabled containerStyle={[]}>
         <ListItem.Content style={[contentTime, alignCenter]}>
           <Text style={[timeLine, bold]}>
-            {new Date(props.info.date).toLocaleDateString("vi-VN", { timeStyle: "full" })}
+            {new Date(props.info.date).toLocaleDateString("vi-VN", {
+              timeStyle: "full",
+            })}
           </Text>
           <Text style={[timeLine]}>
             {TIME_PERIOD[props.info.timePeriod].toString()}
@@ -47,8 +49,8 @@ export default function AppointmentItem(props: {
           ]}
         >
           <ListItem.Title>{props.info.profile.name}</ListItem.Title>
-          {props.info.service.map((service) => (
-            <ListItem.Subtitle style={[marginHorizontal]}>
+          {props.info.service.map((service, idx) => (
+            <ListItem.Subtitle style={[marginHorizontal]} key={idx}>
               {service.name}
             </ListItem.Subtitle>
           ))}

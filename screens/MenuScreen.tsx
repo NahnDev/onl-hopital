@@ -1,34 +1,43 @@
 import { Avatar, Button, Icon, ListItem, Text } from "@rneui/base";
-import React from "react";
-import { View, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ScrollView, Pressable } from "react-native";
 import { useStyles } from "../style";
-import { useSelector } from "react-redux";
-import { UserState } from "../store/user";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../store/slices/user.slice";
 import { RootState } from "../store";
+import Colors from "../constants/Colors";
+import useColorScheme from "../hooks/useColorScheme";
+import useImagePicker from "../hooks/useImagePicker";
+import uploadAvatar from "../store/actions/user.actions";
+import { BaseUrl } from "../constants/BaseUrl";
+import ImagePicker from "../components/ImagePicker";
 
 export default function MenuScreen() {
   const {
     screen,
     header,
     content,
-    alignCenter,
+    itemCenter: alignCenter,
     flex,
     justifyCenter,
     transparent,
     shadow,
     text,
-    text_reverse,
+    textReverse: text_reverse,
     marginHorizontal,
     padding,
     marginVertical,
-    roundFull,
+    roundedFull: roundFull,
+    opacity,
   } = useStyles();
+  const colorSchema = useColorScheme();
   const user = useSelector<RootState, UserState>((state) => state.user);
+
   return (
     <View style={[screen]}>
       <View style={[header, { alignItems: "stretch" }]}>
         <ListItem containerStyle={[transparent]}>
-          <Avatar rounded size="large" source={{ uri: user.avatar }}></Avatar>
+          <UserAvatar uri={user.avatar} _id={user._id}></UserAvatar>
           <ListItem.Content>
             <ListItem.Title>
               <Text h4 style={[text_reverse]}>
@@ -72,5 +81,19 @@ export default function MenuScreen() {
   );
 }
 
-const avatar =
-  "https://scontent.fvca1-2.fna.fbcdn.net/v/t1.6435-9/118630033_752251945336443_2160014405435624924_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vjLRErBnQ6oAX_O933e&_nc_ht=scontent.fvca1-2.fna&oh=00_AT_oxDthzU-6-mqAL2N4r44MoXvThVNvJOZ_ppAXZhemXQ&oe=626D7EF5";
+function UserAvatar(props: { _id: string; uri: string }) {
+  const colorSchema = useColorScheme();
+  const { opacity, roundedFull: roundFull } = useStyles();
+  const [uri, setUri] = useState<string>(props.uri);
+  const dispatch = useDispatch();
+  const handleChange = (uri: string) => {
+    dispatch(uploadAvatar(props._id, uri));
+  };
+  return (
+    <ImagePicker
+      defaultUri={uri}
+      onChange={handleChange}
+      imageStyle={[{ height: 100, width: 100 }, roundFull]}
+    ></ImagePicker>
+  );
+}

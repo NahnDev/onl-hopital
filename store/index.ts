@@ -1,17 +1,26 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { appointmentReducer } from "./appointment";
-import { doctorReducer } from "./doctor";
-import { profileReducer } from "./profile";
-import { userReducer } from "./user";
+import { appointmentReducer } from "./slices/appointment.slice";
+import { doctorReducer } from "./slices/doctor.slice";
+import { profileReducer } from "./slices/profile.slice";
+import { userReducer } from "./slices/user.slice";
+import thunk from "redux-thunk";
+import { authReducer } from "./slices/auth.slice";
+import { loadReduce } from "./slices/load.slice";
+import { serviceReducer } from "./slices/service.slice";
+import { processReducer } from "./slices/process.slice";
 
 const store = configureStore({
   reducer: {
+    services: serviceReducer,
+    load: loadReduce,
+    auth: authReducer,
     user: userReducer,
     appointments: appointmentReducer,
     doctors: doctorReducer,
     profiles: profileReducer,
+    process: processReducer,
   },
-  middleware: [],
+  middleware: [thunk],
 });
 export default store;
 

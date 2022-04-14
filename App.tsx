@@ -7,10 +7,12 @@ import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 
 import { View, Text } from "react-native";
-import { Provider } from "react-redux";
-import store from "./store";
+import { Provider, useSelector } from "react-redux";
+import store, { RootState } from "./store";
 import { defaultTheme } from "./themes/default";
-import { ThemeProvider } from "@rneui/themed";
+import { ThemeProvider, useTheme } from "@rneui/themed";
+import { LinearProgress } from "@rneui/base";
+import LoadingProcess from "./components/LoadingProcess";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -20,22 +22,23 @@ export default function App() {
     return null;
   } else {
     return (
-      <Provider store={store}>
-        <ThemeProvider theme={defaultTheme}>
-          <SafeAreaProvider>
-            <Suspense
-              fallback={
-                <View>
-                  <Text>Loading ...</Text>
-                </View>
-              }
-            >
+      <ThemeProvider theme={defaultTheme}>
+        <SafeAreaProvider>
+          <Suspense
+            fallback={
+              <View>
+                <Text>Loading ...</Text>
+              </View>
+            }
+          >
+            <Provider store={store}>
+              <LoadingProcess></LoadingProcess>
               <Navigation colorScheme={colorScheme} />
-            </Suspense>
-            <StatusBar />
-          </SafeAreaProvider>
-        </ThemeProvider>
-      </Provider>
+            </Provider>
+          </Suspense>
+          <StatusBar />
+        </SafeAreaProvider>
+      </ThemeProvider>
     );
   }
 }

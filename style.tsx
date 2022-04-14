@@ -7,15 +7,26 @@ export function useStyles() {
   const colorSchema = useColorScheme();
   return StyleSheet.create({
     bold: { fontWeight: "bold" },
+    italic: { fontStyle: "italic" },
+    size5: { fontSize: 32 },
+    size4: { fontSize: 28 },
+    size3: { fontSize: 24 },
+    size2: { fontSize: 20 },
+    size1: { fontSize: 16 },
 
+    textCenter: { textAlign: "center" },
+    textReverse: { color: Colors[colorSchema].background },
+    text: { color: Colors[colorSchema].text },
+
+    zIndex: { zIndex: 10 },
+
+    flex: { display: "flex" },
     row: { flexDirection: "row" },
     column: { flexDirection: "column" },
 
-    flex: { display: "flex" },
-
-    alignCenter: { alignItems: "center" },
-    alignStart: { alignItems: "flex-start" },
-    alignEnd: { alignItems: "flex-end" },
+    itemCenter: { alignItems: "center" },
+    itemStart: { alignItems: "flex-start" },
+    itemEnd: { alignItems: "flex-end" },
 
     justifyCenter: { justifyContent: "center" },
     justifyStart: { justifyContent: "flex-start" },
@@ -28,10 +39,6 @@ export function useStyles() {
     margin: { margin: 10 },
     marginHorizontal: { marginHorizontal: 10 },
     marginVertical: { marginVertical: 10 },
-
-    textCenter: {
-      textAlign: "center",
-    },
 
     shadow: {
       shadowOffset: { width: 5, height: 5 },
@@ -46,20 +53,18 @@ export function useStyles() {
       display: "flex",
       padding: 10,
     },
-    rounded: {
-      borderRadius: 10,
-      padding: 10,
-      overflow: "hidden",
-    },
 
-    roundFull: {
-      borderRadius: 9999,
-    },
-    text_reverse: {
-      color: Colors[colorSchema].background,
-    },
-    text: {
-      color: Colors[colorSchema].text,
+    rounded: { borderRadius: 10, padding: 10, overflow: "hidden" },
+    roundedFull: { borderRadius: 9999, overflow: "hidden" },
+
+    transparent: { backgroundColor: "transparent" },
+    opacity: { opacity: 0.5 },
+
+    border: { borderWidth: 1 },
+    borderDashed: {
+      borderWidth: 1,
+      borderStyle: "dashed",
+      borderColor: Colors[colorSchema].overlay,
     },
 
     button: {
@@ -94,41 +99,23 @@ export function useStyles() {
       flex: 1,
     },
 
-    subHeader: {
-      fontSize: 16,
-      textAlign: "center",
+    label: {
+      fontWeight: "bold",
+      alignSelf: "flex-start",
+      backgroundColor: Colors[colorSchema].background,
+      color: Colors[colorSchema].primary,
+      marginHorizontal: 10,
+      paddingHorizontal: 2,
+      zIndex: 10,
     },
-    transparent: {
-      backgroundColor: "transparent",
-    },
-    opacity: {
-      opacity: 0.5,
-    },
-    border: {
+    input: {
+      marginTop: -10,
+      padding: 10,
       borderWidth: 1,
-    },
-    borderDashed: {
-      borderWidth: 1,
-      borderStyle: "dashed",
+      borderRadius: 10,
+      borderColor: Colors[colorSchema].border,
     },
 
-    italic: {
-      fontStyle: "italic",
-    },
-    size5: {
-      fontSize: 32,
-    },
-    size4: {
-      fontSize: 28,
-    },
-    size3: {
-      fontSize: 24,
-    },
-    size2: {
-      fontSize: 20,
-    },
-    size1: {
-      fontSize: 16,
-    },
+    subHeader: { fontSize: 16, textAlign: "center" },
   });
 }

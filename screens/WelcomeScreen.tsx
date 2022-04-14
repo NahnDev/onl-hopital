@@ -13,7 +13,7 @@ import useColorScheme from "../hooks/useColorScheme";
 import { useStyles } from "../style";
 
 export default function WelcomeScreen() {
-  const { screen, button, roundFull } = useStyles();
+  const { screen, button, roundedFull: roundFull } = useStyles();
   const [visible, setVisible] = useState(false);
   const colorSchema = useColorScheme();
 

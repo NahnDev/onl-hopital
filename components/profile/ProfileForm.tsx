@@ -1,70 +1,61 @@
-import { ButtonGroup } from "@rneui/base";
-import { Avatar, Button, Icon, Input, Text } from "@rneui/themed";
-import React from "react";
-import { View, Image, ScrollView } from "react-native";
-import Colors from "../../constants/Colors";
+import { Button, Image, Avatar, Input, Text, Icon } from "@rneui/themed";
+import React, { useState } from "react";
+import { View, ScrollView, Pressable } from "react-native";
+
 import { GENDER } from "../../enum/GENDER";
-import useColorScheme from "../../hooks/useColorScheme";
-import { ProfileType } from "../../store/types";
+import { CreateProfileDto, ProfileType } from "../../store/types";
 import { useStyles } from "../../style";
+import { Colors } from "../../themes/default";
 import GoBack from "../GoBack";
 import HistoryItem from "../history/HistoryItem";
 import ImagePicker from "../ImagePicker";
 import Selector from "../Selector";
 
-export default function ProfileDetail(props: {
-  info: ProfileType;
-  onClose?: () => any;
-}) {
+export default function ProfileForm(props: { onClose?: () => any }) {
   //#region style
   const { size1, size2, textReverse, bold } = useStyles();
   const { rounded, roundedFull, opacity } = useStyles();
   const { margin, padding, paddingVertical, paddingHorizontal } = useStyles();
   const { border, borderDashed } = useStyles();
   const { label, input } = useStyles();
-  const { row, itemCenter, justifyCenter } = useStyles();
+  const { row, itemCenter } = useStyles();
   const { screen, header, content } = useStyles();
   //#endregion
-  const colorSchema = useColorScheme();
-  const { background, warning } = Colors[colorSchema];
 
+  const [profile, setProfile] = useState<CreateProfileDto>(initialProfile);
   return (
     <View style={[screen]}>
       <GoBack onPress={() => props.onClose && props.onClose()}></GoBack>
       <View style={[header, { height: 120 }]}>
         <Text style={[textReverse]} h4>
-          {props.info.name}
+          {profile.name}
         </Text>
       </View>
       <ScrollView style={[content]}>
         <View style={[paddingVertical, { marginBottom: 400 }]}>
           <ImagePicker
-            disable
-            defaultUri={props.info.image}
+            defaultUri={profile.image}
             aspect={[3, 4]}
             imageStyle={{ height: 200, width: 150 }}
           ></ImagePicker>
           <Input
             inputContainerStyle={[input]}
             labelStyle={[label]}
-            value={props.info.name}
+            value={profile.name}
             label="Ho va ten"
-            editable={false}
           ></Input>
           <Input
             keyboardType="phone-pad"
             inputContainerStyle={[input]}
             labelStyle={[label]}
-            value={props.info.phone}
+            value={profile.phone}
             label="So dien thoai"
-            editable={false}
           ></Input>
           <Input
             inputContainerStyle={[input]}
             labelStyle={[label]}
-            value={props.info.address}
+            value={profile.address}
             label="Dia chi"
-            editable={false}
           ></Input>
           <View style={[row]}>
             <View style={{ flex: 1 }}>
@@ -72,17 +63,15 @@ export default function ProfileDetail(props: {
                 inputContainerStyle={[input]}
                 labelStyle={[label]}
                 keyboardType="number-pad"
-                value={(props.info.age || 18)?.toString()}
+                value={(profile.age || 18)?.toString()}
                 label="Tuoi"
-                editable={false}
               ></Input>
             </View>
             <View style={[{ flex: 1 }]}>
               <Selector
-                defaultValue={[props.info.sex]}
+                defaultValue={[GENDER.MALE]}
                 source={[GENDER.MALE, GENDER.FEMALE]}
                 label="Gioi tinh"
-                disable
                 onChange={(item) => {}}
                 valueStyle={{ margin: 0, padding: 0 }}
                 render={(item, selected, props) => (
@@ -100,20 +89,18 @@ export default function ProfileDetail(props: {
               ></Selector>
             </View>
           </View>
-          <View style={[row, justifyCenter]}>
-            <Button
-              buttonStyle={[rounded, margin]}
-              title={"Chinh sua"}
-              icon={{ name: "edit", color: background }}
-            ></Button>
-            <Button
-              buttonStyle={[rounded, margin, { backgroundColor: warning }]}
-              title={"Xoa ho so"}
-              icon={{ name: "delete", color: background }}
-            ></Button>
-          </View>
+          <Button title={"Tao ho so"}></Button>
         </View>
       </ScrollView>
     </View>
   );
 }
+
+const initialProfile: CreateProfileDto = {
+  name: "",
+  address: "",
+  age: 18,
+  phone: "",
+  sex: GENDER.MALE,
+  image: "",
+};

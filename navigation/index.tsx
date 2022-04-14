@@ -57,7 +57,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Register">
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{ statusBarHidden: true }}
+    >
       <Stack.Screen
         name="Root"
         component={BottomTabNavigator}
@@ -115,7 +118,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="Booking"
+      initialRouteName="Profile"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: [

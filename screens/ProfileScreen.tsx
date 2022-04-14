@@ -17,6 +17,7 @@ import { ProfileType } from "../store/types";
 import ProfileDetail from "../components/profile/ProfileDetail";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import ProfileForm from "../components/profile/ProfileForm";
 
 export default function ProfileScreen() {
   const { screen, transparent, header, content } = useStyles();
@@ -27,6 +28,10 @@ export default function ProfileScreen() {
     Object.keys(state.profiles).map((key) => state.profiles[key])
   );
   const [focusItem, setFocusItem] = useState<ProfileType | null>(null);
+  const [formVisible, setFormVisible] = useState<boolean>(false);
+  const handleCreate = () => {
+    setFormVisible(true);
+  };
   return (
     <View style={screen}>
       <View style={[header]}>
@@ -47,6 +52,7 @@ export default function ProfileScreen() {
             }}
             containerStyle={{ borderRadius: 100 }}
             title="Thêm hồ sơ mới"
+            onPress={handleCreate}
           ></Button>
         </View>
       </View>
@@ -64,6 +70,11 @@ export default function ProfileScreen() {
             info={focusItem}
             onClose={() => setFocusItem(null)}
           ></ProfileDetail>
+        )}
+      </Modal>
+      <Modal visible={formVisible} statusBarTranslucent animationType="slide">
+        {formVisible && (
+          <ProfileForm onClose={() => setFormVisible(false)}></ProfileForm>
         )}
       </Modal>
     </View>

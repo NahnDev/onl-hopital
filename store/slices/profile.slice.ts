@@ -1,5 +1,5 @@
 import { createSlice, SliceCaseReducers } from "@reduxjs/toolkit";
-import { ProfileType } from "./types";
+import { ProfileType } from "../types";
 
 const initialState: ProfileState = {
   "1": {

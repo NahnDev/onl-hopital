@@ -9,11 +9,7 @@ export default function DoctorItem(props: { info: DoctorType }) {
   const { shadow } = useStyles();
   return (
     <ListItem style={[shadow]}>
-      <Avatar
-        source={{ uri: props.info.avatar }}
-        size="medium"
-        rounded
-      ></Avatar>
+      <Avatar source={{ uri: props.info.avatar }} size="large" rounded></Avatar>
       <ListItem.Content>
         <ListItem.Title style={cusStyle.title}>
           {props.info.name}

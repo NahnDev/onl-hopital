@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../types";
 import { RootState } from "../store";
 import { useSelector } from "react-redux";
-import { AppointmentState } from "../store/appointment";
+import { AppointmentState } from "../store/slices/appointment.slice";
 import { ButtonGroup, ThemeProvider, Button } from "@rneui/themed";
 import { defaultTheme } from "../themes/default";
 

@@ -1,4 +1,10 @@
-import { StyleSheet, ScrollView, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Pressable,
+  KeyboardAvoidingView,
+} from "react-native";
 import DoctorItem from "../components/doctor/DoctorItem";
 
 import EditScreenInfo from "../components/EditScreenInfo";
@@ -8,20 +14,29 @@ import { useStyles } from "../style";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 import DoctorDetail from "../components/doctor/DoctorDetail";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RootState } from "../store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loadDoctor } from "../store/actions/doctor.actions";
 
 export default function DoctorScreen() {
   const { search, content } = useCusStyle();
-  const { screen, rounded, margin, shadow, header } = useStyles();
-  const [doctorSelected, setDoctorSelected] = useState<DoctorType | null>(null);
+  const [filter, setFilter] = useState<string>("");
+
+  const { screen, rounded, margin, shadow, header, textCenter } = useStyles();
   const lightColor = Colors[useColorScheme()].background;
-  const doctors = useSelector<RootState, DoctorType[]>((state) =>
-    Object.keys(state.doctors).map((key) => state.doctors[key])
-  );
+  const dispatch = useDispatch();
   const handleBackdropPress = () => {};
 
+  const [doctorSelected, setDoctorSelected] = useState<DoctorType | null>(null);
+  const doctors = useSelector<RootState, DoctorType[]>((state) =>
+    Object.keys(state.doctors)
+      .map((key) => state.doctors[key])
+      .filter((value) => value.name.indexOf(filter) !== -1)
+  );
+  useEffect(() => {
+    dispatch(loadDoctor());
+  }, []);
   return (
     <View style={[screen]}>
       <View style={[header, { height: 220 }]}>
@@ -33,12 +48,16 @@ export default function DoctorScreen() {
           Tận tâm, ân cần và chuyên nghiệp.
         </Text>
         <Input
+          onChangeText={(text) => setFilter(text)}
           placeholder="search ..."
           rightIcon={{ name: "search" }}
           inputContainerStyle={[search]}
         ></Input>
       </View>
       <ScrollView style={[content, rounded, shadow]}>
+        {doctors.length === 0 && (
+          <Text style={[textCenter]}>Không tìm thấy dữ liệu</Text>
+        )}
         {doctors.map((info) => (
           <Pressable onPress={() => setDoctorSelected(info)} key={info._id}>
             <DoctorItem info={info}></DoctorItem>

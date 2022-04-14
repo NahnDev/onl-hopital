@@ -8,6 +8,7 @@ import {
   BackgroundImage,
   Input,
   color,
+  ListItem,
 } from "@rneui/base";
 import { DoctorType } from "../../store/types";
 import { useStyles } from "../../style";
@@ -29,9 +30,15 @@ export default function DoctorDetail(props: {
     shadow,
     header,
     content,
-    roundFull,
-    alignCenter,
-    text_reverse,
+    roundedFull: roundFull,
+    itemCenter: alignCenter,
+    textReverse: text_reverse,
+    textCenter,
+    justifyCenter,
+    column,
+    row,
+    justifyStart,
+    itemStart: alignStart,
   } = useStyles();
   const { image, backIcon, imageBox, item } = useCusStyle();
   return (
@@ -40,138 +47,61 @@ export default function DoctorDetail(props: {
       <View style={[header, { height: 400 }, imageBox]}>
         <Image
           source={{
-            uri: "https://scontent.fvca1-2.fna.fbcdn.net/v/t1.6435-9/118630033_752251945336443_2160014405435624924_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=vjLRErBnQ6oAX_O933e&_nc_ht=scontent.fvca1-2.fna&oh=00_AT_oxDthzU-6-mqAL2N4r44MoXvThVNvJOZ_ppAXZhemXQ&oe=626D7EF5",
+            uri: props.info.avatar,
           }}
           style={[{ width: 200, height: 200 }, roundFull]}
         ></Image>
 
-        <View style={[alignCenter]}>
-          <Text h2 style={[text_reverse]}>
+        <View style={[alignCenter, justifyCenter, margin, padding]}>
+          <Text h3 style={[text_reverse]}>
             {props.info.name}
           </Text>
-          <Text style={[text_reverse]}>{props.info.introduce}</Text>
+          <Text style={[text_reverse, textCenter]}>{props.info.introduce}</Text>
         </View>
       </View>
 
-      <ScrollView style={[content, rounded]}>
+      <ScrollView style={[content, rounded, padding]}>
+        <View style={{ margin: 20 }}>
+          <ListItem containerStyle={[margin, padding, column, alignStart]}>
+            <View style={[row, alignCenter]}>
+              <Icon name="phone"></Icon>
+              <Text style={[margin]}>{props.info.phone} </Text>
+            </View>
+            <View style={[row, alignCenter]}>
+              <Icon name="mail"></Icon>
+              <Text style={[margin]}>{props.info.email} </Text>
+            </View>
+          </ListItem>
+        </View>
         <View>
-          <View style={[rounded, item, shadow, marginVertical]}>
-            <View>
-              <Input
-                label="Email"
-                editable={false}
-                value={props.info.email}
-              ></Input>
-            </View>
-            <View>
-              <Input
-                label="Email"
-                editable={false}
-                value={props.info.email}
-              ></Input>
-            </View>
-            <View>
-              <Input
-                label="Email"
-                editable={false}
-                value={props.info.email}
-              ></Input>
-            </View>
-          </View>
-          <View style={[marginVertical, padding, rounded, item, shadow]}>
-            <View>
-              <Input
-                label="Email"
-                editable={false}
-                value={props.info.email}
-              ></Input>
-            </View>
-            <View>
-              <Input
-                label="Email"
-                editable={false}
-                value={props.info.email}
-              ></Input>
-            </View>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
-          <View>
-            <Input
-              label="Email"
-              editable={false}
-              value={props.info.email}
-            ></Input>
-          </View>
+          <ListItem>
+            <ListItem.Content>
+              <ListItem.Title>
+                <Text h4>Thông tin chuyên môn</Text>
+              </ListItem.Title>
+              {props.info.info &&
+                props.info.info.map((content, idx) => (
+                  <ListItem.Subtitle key={idx} style={{ margin: 5 }}>
+                    {content}
+                  </ListItem.Subtitle>
+                ))}
+            </ListItem.Content>
+          </ListItem>
+        </View>
+        <View>
+          <ListItem>
+            <ListItem.Content>
+              <ListItem.Title>
+                <Text h4>Education</Text>
+              </ListItem.Title>
+              {props.info.education &&
+                props.info.education.map((content, idx) => (
+                  <ListItem.Subtitle key={idx} style={{ margin: 5 }}>
+                    {content}
+                  </ListItem.Subtitle>
+                ))}
+            </ListItem.Content>
+          </ListItem>
         </View>
       </ScrollView>
     </View>

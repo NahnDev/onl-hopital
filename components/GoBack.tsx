@@ -9,7 +9,7 @@ export default function GoBack(props: {
   style?: StyleProp<ViewStyle>;
   color?: string;
 }) {
-  const { alignStart } = useStyles();
+  const { itemStart: alignStart } = useStyles();
   const navigation = useNavigation();
   return (
     <View
