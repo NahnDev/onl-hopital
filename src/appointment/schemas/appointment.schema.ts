@@ -5,6 +5,7 @@ import { ExposeId } from 'src/decorators/export-id.decorator';
 import { plainToClass, Type } from 'class-transformer';
 import { Profile } from 'src/profile/schemas/profile.schema';
 import { Doctor } from 'src/doctor/schemas/doctor.schema';
+import { Service } from 'src/service/schemas/service.schema';
 
 @Schema()
 export class Appointment {
@@ -19,6 +20,16 @@ export class Appointment {
   @ApiProperty()
   @Prop({ type: Number, required: true })
   timePeriod: number;
+
+  @ApiProperty()
+  @Type(() => Service)
+  @Prop({
+    type: [SchemaTypes.ObjectId],
+    required: true,
+    default: [],
+    ref: 'Service',
+  })
+  services: Service[];
 
   @ApiProperty()
   @Prop({ type: String })

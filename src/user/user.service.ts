@@ -15,6 +15,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    createUserDto.password = await hash(createUserDto.password, 1);
     const userDoc = new this.userModel(createUserDto);
     await userDoc.save();
     const user = userDoc.toJSON();
@@ -27,7 +28,7 @@ export class UserService {
 
   async findOne(_id: string) {
     const userDoc = await this.userModel.findById(_id);
-    if (userDoc) return null;
+    if (!userDoc) return null;
     return userDoc.toJSON();
   }
 
@@ -49,7 +50,10 @@ export class UserService {
   }
   async validAccount(email: string, password: string) {
     const user = await this.findWithEmail(email);
-    if (!user) return false;
+    if (!user) {
+      console.log('Not found account');
+      return false;
+    }
     return await compare(password, user.password);
   }
 }

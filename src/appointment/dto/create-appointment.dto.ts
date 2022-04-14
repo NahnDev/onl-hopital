@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsMongoId, IsNumber, IsString } from 'class-validator';
 
 export class CreateAppointmentDto {
   @ApiProperty()
@@ -21,4 +22,9 @@ export class CreateAppointmentDto {
   @ApiProperty()
   @IsMongoId()
   doctor: string;
+
+  @ApiProperty()
+  @IsArray()
+  @IsMongoId()
+  services: string[];
 }

@@ -16,9 +16,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: config.get<string>('security.accessToken.secret'),
     });
+    console.log(config.get<string>('security.accessToken.secret'));
   }
 
   async validate(payload: AccessPayload) {
+    console.log(await this.userService.findOne(payload._id));
     return await this.userService.findOne(payload._id);
   }
 }

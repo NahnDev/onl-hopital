@@ -10,6 +10,9 @@ import configuration from './configuration/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { HistoryModule } from './history/history.module';
 import { AuthModule } from './auth/auth.module';
+import { ImagesModule } from './images/images.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
@@ -25,12 +28,15 @@ import { AuthModule } from './auth/auth.module';
         return { uri };
       },
     }),
+    ServeStaticModule.forRoot({ rootPath: 'static', renderPath: 'static' }),
     UserModule,
     ProfileModule,
     DoctorModule,
     AppointmentModule,
     HistoryModule,
     AuthModule,
+    ImagesModule,
+    ServiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
