@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { CreateHistoryDto } from './dto/create-history.dto';
@@ -32,11 +33,13 @@ export class HistoryController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateHistoryDto: UpdateHistoryDto) {
-    return this.historyService.update(id, updateHistoryDto);
+    return new NotFoundException();
+    // return this.historyService.update(id, updateHistoryDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.historyService.remove(id);
+    return new NotFoundException();
+    // return this.historyService.remove(id);
   }
 }

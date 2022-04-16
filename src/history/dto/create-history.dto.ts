@@ -4,5 +4,5 @@ import { IsString } from 'class-validator';
 export class CreateHistoryDto {
   @ApiProperty()
   @IsString()
-  name: string;
+  result: string;
 }

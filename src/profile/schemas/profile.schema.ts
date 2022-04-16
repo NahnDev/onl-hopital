@@ -2,6 +2,8 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { plainToClass, Type } from 'class-transformer';
 import { ExposeId } from 'src/decorators/export-id.decorator';
+import { SchemaTypes } from 'mongoose';
+import { History } from '../../history/schemas/history.schema';
 
 @Schema()
 export class Profile {
@@ -43,6 +45,16 @@ export class Profile {
     default: [],
   })
   histories: History[];
+
+  @ApiProperty()
+  @ExposeId()
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'User',
+    required: true,
+    immutable: true,
+  })
+  user: string;
 }
 
 export type ProfileDoc = Document & Profile;

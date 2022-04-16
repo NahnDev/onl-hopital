@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { plainToClass } from 'class-transformer';
+import { Exclude, plainToClass } from 'class-transformer';
 import { ExposeId } from 'src/decorators/export-id.decorator';
 import { USER_ROLE } from 'src/enum/USER_ROLE';
 
@@ -21,6 +21,7 @@ export class User {
   @Prop({ type: String, required: true })
   name: string;
 
+  @Exclude({ toPlainOnly: true })
   @ApiProperty()
   @Prop({ type: String, required: true })
   password: string;

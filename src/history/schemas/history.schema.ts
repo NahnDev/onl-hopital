@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { ExposeId } from 'src/decorators/export-id.decorator';
+import { SchemaTypes } from 'mongoose';
 
 @Schema()
 export class History {
@@ -11,7 +12,11 @@ export class History {
 
   @ApiProperty()
   @Prop({ type: String, required: true })
-  name: string;
+  result: string;
+
+  @ApiProperty()
+  @Prop({ type: Number, default: Date.now, required: true, immutable: true })
+  at: number;
 }
 
 export type HistoryDoc = Document & History;

@@ -15,11 +15,7 @@ export class Appointment {
 
   @ApiProperty()
   @Prop({ type: Number, required: true })
-  date: number;
-
-  @ApiProperty()
-  @Prop({ type: Number, required: true })
-  timePeriod: number;
+  time: number;
 
   @ApiProperty()
   @Type(() => Service)
@@ -28,6 +24,7 @@ export class Appointment {
     required: true,
     default: [],
     ref: 'Service',
+    autopopulate: true,
   })
   services: Service[];
 
@@ -54,6 +51,16 @@ export class Appointment {
     autopopulate: true,
   })
   doctor: Doctor;
+
+  @ApiProperty()
+  @ExposeId()
+  @Prop({
+    type: SchemaTypes.ObjectId,
+    ref: 'User',
+    required: true,
+    immutable: true,
+  })
+  user: string;
 }
 
 export type AppointmentDoc = Document & Appointment;

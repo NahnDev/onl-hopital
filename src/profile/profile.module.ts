@@ -3,6 +3,7 @@ import { ProfileService } from './profile.service';
 import { ProfileController } from './profile.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Profile, ProfileSchema } from './schemas/profile.schema';
+import { HistoryModule } from 'src/history/history.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Profile, ProfileSchema } from './schemas/profile.schema';
         },
       },
     ]),
+    HistoryModule,
   ],
   controllers: [ProfileController],
   providers: [ProfileService],

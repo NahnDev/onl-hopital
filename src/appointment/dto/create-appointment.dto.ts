@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, IsMongoId, IsNumber, IsString } from 'class-validator';
+import { SchemaTypes } from 'mongoose';
 
 export class CreateAppointmentDto {
   @ApiProperty()
   @IsNumber()
-  date: number;
-
-  @ApiProperty()
-  @IsNumber()
-  timePeriod: number;
+  time: number;
 
   @ApiProperty()
   @IsString()
@@ -25,6 +22,6 @@ export class CreateAppointmentDto {
 
   @ApiProperty()
   @IsArray()
-  @IsMongoId()
+  @Type(() => SchemaTypes.ObjectId)
   services: string[];
 }
