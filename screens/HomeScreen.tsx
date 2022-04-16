@@ -20,9 +20,11 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
     textReverse: text_reverse,
     justifyCenter,
     textCenter,
+    opacity,
     header,
     content,
     item,
+    margin,
     marginVertical,
   } = useStyles();
   return (
@@ -40,6 +42,13 @@ export default function HomeScreen({ navigation }: RootTabScreenProps<"Home">) {
         <Text style={[text_reverse, textCenter]}>
           Ứng dụng đặt lịch khám bệnh của phòng khám nha khoa
         </Text>
+        <View style={[, opacity, { margin: 20 }]}>
+          <Text style={[text_reverse, textCenter]}>
+            Đây chỉ là bản dựng phụ vụ cho đồ án học tập, không có ý nghĩa sử
+            dụng. Một số dữ liệu để chạy bản thử nghiệm được lấy từ website của
+            Nha khoa Viễn Đông Cần Thơ.
+          </Text>
+        </View>
       </View>
     </View>
   );

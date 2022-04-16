@@ -8,6 +8,8 @@ export type ProcessState = {
 
   CreateProfile: { status: PROCESS_STATUS; message?: string };
   UpdateProfile: { status: PROCESS_STATUS; message?: string };
+
+  AuthReLogin: { status: PROCESS_STATUS; message?: string };
 };
 const initialState: ProcessState = {
   CreateAppointment: { status: PROCESS_STATUS.WAIT },
@@ -15,6 +17,7 @@ const initialState: ProcessState = {
   UpdateProfile: { status: PROCESS_STATUS.WAIT },
   LoadAppointment: { status: PROCESS_STATUS.WAIT },
   CancelAppointment: { status: PROCESS_STATUS.WAIT },
+  AuthReLogin: { status: PROCESS_STATUS.WAIT },
 };
 
 export const processSlice = createSlice({

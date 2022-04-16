@@ -22,6 +22,7 @@ export default function MenuScreen() {
   const colorSchema = useColorScheme();
   const { background } = Colors[colorSchema];
 
+  const handleLogout = () => {};
   const user = useSelector<RootState, UserState>((state) => state.user);
   return (
     <View style={[screen]}>
@@ -54,6 +55,7 @@ export default function MenuScreen() {
         </View>
         <View style={[marginVertical]}>
           <Button
+            onPress={handleLogout}
             titleStyle={[marginHorizontal]}
             containerStyle={[roundedFull]}
             buttonStyle={[

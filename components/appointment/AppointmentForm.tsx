@@ -51,7 +51,7 @@ export default function AppointmentForm() {
   const { label, input, header, content, screen, justifyStart } = useStyles();
   //#endregion
 
-  const { overlay } = Colors[useColorScheme()];
+  const { overlay, warning } = Colors[useColorScheme()];
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -77,6 +77,7 @@ export default function AppointmentForm() {
 
   const [appointment, setAppointment] = useState<CreateAppointmentDto>(initial);
   const { status: pStatus, reset } = useProcess("CreateAppointment");
+  const [rangeDateError, setRangeDateError] = useState<boolean>(false);
   const { push } = useNotification();
   useEffect(() => {
     if (pStatus.status === PROCESS_STATUS.COMPLETE) {
@@ -117,7 +118,12 @@ export default function AppointmentForm() {
     dispatch(AppointmentActions.create(appointment));
   };
   const handleUpdateDate = (d: Date) => {
-    if (d.getTime() > Date.now()) handleUpdate({ time: d.getTime() });
+    if (d.getTime() > Date.now()) {
+      setRangeDateError(false);
+    } else {
+      setRangeDateError(true);
+    }
+    handleUpdate({ time: d.getTime() });
   };
 
   return (
@@ -178,6 +184,7 @@ export default function AppointmentForm() {
 
           <DateSelector
             label="Chon ngay "
+            error={rangeDateError}
             value={new Date(appointment.time)}
             onChange={(date) => {
               const d = new Date(appointment.time);
@@ -192,6 +199,7 @@ export default function AppointmentForm() {
           ></DateSelector>
           <TimeSelector
             label="Thoi gian"
+            error={rangeDateError}
             value={new Date(appointment.time)}
             onChange={(date) => {
               const d = new Date(appointment.time);
@@ -231,7 +239,15 @@ export default function AppointmentForm() {
             inputContainerStyle={[input, { marginHorizontal: -10 }]}
             containerStyle={{ marginVertical: 10 }}
           ></Input>
+          <View style={[marginVertical]}>
+            {rangeDateError && (
+              <Text style={[margin, { color: warning }]}>
+                * Bạn không thể chọn một ngày đã qua để đặt hẹn
+              </Text>
+            )}
+          </View>
           <Button
+            disabled={rangeDateError}
             title="Dat lich"
             buttonStyle={[padding, roundedFull]}
             onPress={handleSubmit}
@@ -249,7 +265,7 @@ export default function AppointmentForm() {
   );
 }
 const initial: CreateAppointmentDto = {
-  time: new Date().getTime(),
+  time: new Date().getTime() + 30 * 60 * 1000,
   note: "",
   profile: "",
   doctor: "",

@@ -118,7 +118,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Home"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: [

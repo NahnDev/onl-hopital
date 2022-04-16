@@ -1,4 +1,4 @@
-import { AnyAction, configureStore } from "@reduxjs/toolkit";
+import { Action, AnyAction, configureStore } from "@reduxjs/toolkit";
 import { appointmentReducer } from "./slices/appointment.slice";
 import { doctorReducer } from "./slices/doctor.slice";
 import { profileReducer } from "./slices/profile.slice";

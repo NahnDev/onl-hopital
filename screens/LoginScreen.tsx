@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 import { CheckBox } from "@rneui/base";
-import { Text, Input } from "@rneui/themed";
+import { Text, Input, LinearProgress } from "@rneui/themed";
 import { useStyles } from "../style";
 import { Button } from "@rneui/themed";
 import useColorScheme from "../hooks/useColorScheme";
@@ -20,6 +20,9 @@ import { AppDispatch, RootState } from "../store";
 import { login, register } from "../store/actions/auth.actions";
 import { UserState } from "../store/slices/user.slice";
 import useAutoLogin from "../hooks/useAutoLogin";
+import useProcess from "../hooks/useProcess";
+import { PROCESS_STATUS } from "../enum/PROCESS_ENUM";
+import ProcessWaiting from "../components/ProcessWaiting";
 
 export default function RegisterScreen() {
   //#region import style
@@ -68,6 +71,7 @@ export default function RegisterScreen() {
   };
 
   const hasUser = useSelector<RootState, boolean>((state) => !!state.user._id);
+  const { status: autoLoginStatus } = useProcess("AuthReLogin");
   useEffect(() => {
     if (hasUser) navigation.navigate("Root");
   }, [hasUser]);
@@ -119,6 +123,11 @@ export default function RegisterScreen() {
           </Pressable>
         </View>
       </View>
+
+      <ProcessWaiting visible={autoLoginStatus.status === PROCESS_STATUS.DOING}>
+        <Text style={{ textAlign: "center" }}>Tự động đăng nhập</Text>
+        <LinearProgress style={{ width: 300 }} color={"teal"}></LinearProgress>
+      </ProcessWaiting>
     </View>
   );
 }

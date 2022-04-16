@@ -8,7 +8,6 @@ import { Colors } from "../themes/default";
 
 export default function Selector<T, K>(props: {
   label: string;
-
   defaultValue?: T[];
   source: T[];
   onChange: (items: T[]) => any;
@@ -19,6 +18,8 @@ export default function Selector<T, K>(props: {
   ) => React.ReactNode;
 
   multiple?: boolean;
+  nonRequired?: boolean;
+  onError?: (error: string) => any;
   disable?: boolean;
   style?: StyleProp<ViewStyle>;
   valueStyle?: StyleProp<ViewStyle>;
@@ -32,11 +33,12 @@ export default function Selector<T, K>(props: {
   const { label, input } = useStyles();
   //#endregion
 
-  const { overlay } = Colors;
+  const { overlay, warning } = Colors;
 
   // ----- property
   const [visible, setVisible] = useState<boolean>(false);
   const [selected, setSelected] = useState<T[]>(props.defaultValue || []);
+  const [error, setError] = useState<string>("");
   // const selectedItems = props.source.filter((item, key) =>
   //   selected.includes(key)
   // );
@@ -44,11 +46,19 @@ export default function Selector<T, K>(props: {
   useEffect(() => {
     props.onChange(selected);
   }, [selected]);
+  useEffect(() => {
+    if (!props.nonRequired && selected.length === 0) {
+      setError("require");
+      props.onError && props.onError("require");
+    } else {
+      setError("");
+    }
+  }, [props.nonRequired, selected]);
 
   return (
     <View style={[props.style]}>
       <Text style={[label]}>{props.label}</Text>
-      <View style={[input]}>
+      <View style={[input, !!error && { borderColor: warning }]}>
         <Pressable onPress={() => setVisible(true)}>
           {selected.length <= 0 ? (
             <View style={[roundedFull, opacity, borderDashed]}>

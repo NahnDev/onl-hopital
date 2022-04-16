@@ -19,8 +19,12 @@ const authSlice = createSlice<AuthState, SliceCaseReducers<AuthState>>({
       AsyncStorage.setItem("@access_token", action.payload.accessToken);
       return action.payload;
     },
+    clear(state, action: PayloadAction<any>) {
+      AsyncStorage.clear();
+      return initialState;
+    },
   },
 });
 
 export const authReducer = authSlice.reducer;
-export const { set } = authSlice.actions;
+export const { set, clear } = authSlice.actions;

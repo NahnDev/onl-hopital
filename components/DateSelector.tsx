@@ -17,6 +17,7 @@ import Colors from "../constants/Colors";
 export default function DateSelector(props: {
   value: Date;
   label: string;
+  error?: boolean;
   onChange: (date: Date) => any;
   style?: StyleProp<ViewStyle>;
 }) {
@@ -30,7 +31,7 @@ export default function DateSelector(props: {
 
   const { display, container } = useCusStyle();
   const [datePickerShow, setDatePickerShow] = useState(false);
-  const { overlay } = Colors[useColorScheme()];
+  const { overlay, warning } = Colors[useColorScheme()];
 
   const handleDateChange = (e: DateTimePickerEvent, date?: Date) => {
     setDatePickerShow(false);
@@ -41,7 +42,7 @@ export default function DateSelector(props: {
       <Pressable onPress={() => setDatePickerShow(true)}>
         <View style={[props.style]}>
           <Text style={[label]}>{props.label}</Text>
-          <View style={[input]}>
+          <View style={[input, props.error && { borderColor: warning }]}>
             {props.value ? (
               <Text style={[textCenter, roundedFull, padding, size1]}>
                 {props.value.toLocaleDateString("vi-VN", {

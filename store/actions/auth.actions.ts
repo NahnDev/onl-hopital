@@ -1,10 +1,11 @@
 import { AppDispatch } from "..";
 import { BaseUrl } from "../../constants/BaseUrl";
 import { axiosClient } from "../api/axiosClient";
-import { set as setAuth } from "../slices/auth.slice";
+import { set as setAuth, clear as clearAuth } from "../slices/auth.slice";
 import { CreateUserDto, LoginDto, UserType } from "../types";
 import { set as setUser } from "../slices/user.slice";
 import { USER_ROLE } from "../../enum/USER_ROLE";
+import ProcessActions from "./process.actions";
 
 type AuthResponseType = {
   user: UserType;
@@ -38,15 +39,26 @@ export function login(dto: LoginDto) {
     dispatch(setAuth({ accessToken }));
   };
 }
+export function logout() {
+  return async (dispatch: AppDispatch) => {
+    dispatch(clearAuth(""));
+  };
+}
 
 export function reLogin(refreshToken: string) {
   return async (dispatch: AppDispatch) => {
-    dispatch(setAuth({ accessToken: refreshToken }));
-    const authResponse = await axiosClient.post<any, AuthResponseType>(
-      "/auth/re-login"
-    );
-    const { user, accessToken } = authResponse;
-    dispatch(setUser(user));
-    dispatch(setAuth({ accessToken }));
+    try {
+      dispatch(ProcessActions.start("AuthReLogin"));
+      dispatch(setAuth({ accessToken: refreshToken }));
+      const authResponse = await axiosClient.post<any, AuthResponseType>(
+        "/auth/re-login"
+      );
+      const { user, accessToken } = authResponse;
+      dispatch(setUser(user));
+      dispatch(setAuth({ accessToken }));
+      dispatch(ProcessActions.complete("AuthReLogin"));
+    } catch {
+      dispatch(ProcessActions.failure("AuthReLogin"));
+    }
   };
 }
