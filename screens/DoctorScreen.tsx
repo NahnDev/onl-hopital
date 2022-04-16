@@ -32,7 +32,9 @@ export default function DoctorScreen() {
   const doctors = useSelector<RootState, DoctorType[]>((state) =>
     Object.keys(state.doctors)
       .map((key) => state.doctors[key])
-      .filter((value) => value.name.indexOf(filter) !== -1)
+      .filter(
+        (value) => value.name.toUpperCase().indexOf(filter.toUpperCase()) !== -1
+      )
   );
   useEffect(() => {
     dispatch(loadDoctor());

@@ -15,6 +15,7 @@ export default function HistoryItem(props: { info: HistoryType }) {
       ]}
     >
       <Text>{props.info._id}</Text>
+      <Text>{props.info.result}</Text>
       <Text>{new Date(props.info.at).toLocaleString("en-US")}</Text>
     </View>
   );

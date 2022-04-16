@@ -1,12 +1,5 @@
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import {
-  BottomSheet,
-  Dialog,
-  LinearProgress,
-  Overlay,
-  Text,
-} from "@rneui/base";
-import { Button, Input } from "@rneui/themed";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Input, Text } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { TextInput, View, ScrollView, Modal } from "react-native";
 import Colors from "../../constants/Colors";
@@ -22,14 +15,10 @@ import { useStyles } from "../../style";
 import DateSelector from "../DateSelector";
 import DoctorItem from "../doctor/DoctorItem";
 import ProfileItem from "../profile/ProfileItem";
-import Select from "../Select";
-import TimePeriodSelector from "../TimePeriodSelector";
 import GoBack from "../GoBack";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { TIME_PERIOD } from "../../constants/TimePeriod";
 import { loadDoctor } from "../../store/actions/doctor.actions";
-import MultiSelector from "../MultiSelector";
 import Selector from "../Selector";
 import { ServiceActions } from "../../store/actions/service.actions";
 import ServiceItem from "../ServiceItem";
@@ -41,6 +30,11 @@ import ModalScreen from "../../screens/ModalScreen";
 import ProcessWaiting from "../ProcessWaiting";
 import ProcessActions from "../../store/actions/process.actions";
 import useProcess from "../../hooks/useProcess";
+import AppointmentActions from "../../store/actions/appointment.actions";
+import TimeSelector from "../TimeSelector";
+import ProfileActions from "../../store/actions/profile.actions";
+import ActionFallback from "../ActionResultUI/ActionResult";
+import useNotification from "../../hooks/useNotification";
 
 export default function AppointmentForm() {
   //#region style
@@ -69,25 +63,61 @@ export default function AppointmentForm() {
   const services = useSelector<RootState, ServiceState>(
     (state) => state.services
   );
+
+  useEffect(() => {
+    if (Object.keys(doctors).length === 0) dispatch(loadDoctor());
+    if (Object.keys(services).length === 0) dispatch(ServiceActions.load());
+    if (Object.keys(profiles).length === 0) dispatch(ProfileActions.load());
+  }, []);
+
   useEffect(() => {
     if (Object.keys(services).length === 0) dispatch(ServiceActions.load());
     if (Object.keys(doctors).length === 0) dispatch(loadDoctor());
   }, []);
 
   const [appointment, setAppointment] = useState<CreateAppointmentDto>(initial);
-  const handleUpdate = function (v: Partial<CreateAppointmentDto>) {
-    setAppointment({ ...appointment, ...v });
-  };
-
-  const { status: pStatus, complete } = useProcess("CreateAppointment");
+  const { status: pStatus, reset } = useProcess("CreateAppointment");
+  const { push } = useNotification();
   useEffect(() => {
     if (pStatus.status === PROCESS_STATUS.COMPLETE) {
-      navigation.goBack();
+      setTimeout(() => navigation.goBack(), 2000);
+      pushNotification();
+    }
+    if (pStatus.status === PROCESS_STATUS.FAILURE) {
+      setTimeout(() => reset(), 4000);
     }
   }, [pStatus]);
 
+  // Handle notification -------------------------------
+  const handleUpdate = function (v: Partial<CreateAppointmentDto>) {
+    setAppointment({ ...appointment, ...v });
+  };
+  const pushNotification = () => {
+    push({
+      content: {
+        title: "Tester: Thông báo sẽ được hiện trước 10 phút trước cuộc hẹn",
+      },
+      trigger: { seconds: 5 },
+    });
+    push({
+      content: {
+        title: "Bạn có một lịch hẹn khám bệnh gần đến!",
+        color: "teal",
+        body:
+          `${new Date(appointment.time).toLocaleDateString()} ` +
+          `${new Date(appointment.time).toLocaleTimeString()}`,
+      },
+      trigger: {
+        date: Math.max(appointment.time - 10 * 60 * 1000, Date.now()),
+      },
+    });
+  };
   const handleSubmit = () => {
-    complete();
+    console.log(appointment);
+    dispatch(AppointmentActions.create(appointment));
+  };
+  const handleUpdateDate = (d: Date) => {
+    if (d.getTime() > Date.now()) handleUpdate({ time: d.getTime() });
   };
 
   return (
@@ -147,9 +177,38 @@ export default function AppointmentForm() {
           ></Selector>
 
           <DateSelector
+            label="Chon ngay "
+            value={new Date(appointment.time)}
+            onChange={(date) => {
+              const d = new Date(appointment.time);
+              d.setFullYear(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()
+              );
+              handleUpdateDate(new Date(d));
+            }}
+            style={[marginVertical]}
+          ></DateSelector>
+          <TimeSelector
+            label="Thoi gian"
+            value={new Date(appointment.time)}
+            onChange={(date) => {
+              const d = new Date(appointment.time);
+              d.setHours(date.getHours());
+              d.setMinutes(date.getMinutes());
+              handleUpdateDate(new Date(d));
+            }}
+            style={[marginVertical]}
+          ></TimeSelector>
+
+          {/* <DateSelector
             label="Ngay kham"
-            value={new Date(appointment.date)}
-            onChange={(date) => handleUpdate({ date: date.getTime() })}
+            value={new Date(appointment.datetime)}
+            onChange={(date) => {
+              if(new Date(date) <= )
+              handleUpdate({ datetime: date.getTime() });
+            }}
             style={[marginVertical]}
           ></DateSelector>
           <TimePeriodSelector
@@ -163,7 +222,7 @@ export default function AppointmentForm() {
               });
             }}
             style={[marginVertical]}
-          ></TimePeriodSelector>
+          ></TimePeriodSelector> */}
           <Input
             label="Ghi chu"
             multiline
@@ -182,14 +241,17 @@ export default function AppointmentForm() {
       <ProcessWaiting
         visible={pStatus.status === PROCESS_STATUS.DOING}
       ></ProcessWaiting>
+      <ActionFallback
+        status={pStatus.status}
+        message={pStatus.message}
+      ></ActionFallback>
     </View>
   );
 }
 const initial: CreateAppointmentDto = {
-  date: new Date().getTime(),
+  time: new Date().getTime(),
   note: "",
   profile: "",
   doctor: "",
-  timePeriod: 1,
   services: [],
 };

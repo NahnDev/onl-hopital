@@ -5,11 +5,9 @@ export const loadSlice = createSlice({
   initialState: { count: 0 },
   reducers: {
     wait(state) {
-      console.log(" a WAIT -------------------");
       return { count: state.count + 1 };
     },
     complete(state) {
-      console.log(" a complete -------------------");
       return { count: Math.max(state.count - 1, 0) };
     },
   },

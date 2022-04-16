@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   View,
   StyleSheet,
-  StyleProp,
   ViewStyle,
+  StyleProp,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -13,57 +13,51 @@ import { Input, InputProps, Text } from "@rneui/base";
 import { useStyles } from "../style";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
-import { TimePeriod } from "../store/types";
-import { TIME_PERIOD } from "../constants/TimePeriod";
 
-export default function DateSelector(props: {
-  value?: TimePeriod;
+export default function TimeSelector(props: {
+  value: Date;
   label: string;
-  onChange?: (date: TimePeriod) => any;
+  onChange?: (date: Date) => any;
   style?: StyleProp<ViewStyle>;
 }) {
   //#region style
   const { size1, size2, textCenter, bold } = useStyles();
-  const { rounded, roundedFull, opacity } = useStyles();
+  const { rounded, roundedFull, opacity, row, justifyCenter } = useStyles();
   const { margin, padding, marginHorizontal, paddingHorizontal } = useStyles();
   const { border, borderDashed } = useStyles();
   const { label, input } = useStyles();
   //#endregion
 
   const { display, container } = useCusStyle();
-  const [timePeriod, setTimePeriod] = useState<TimePeriod | null | undefined>(
-    props.value
-  );
-  const [timePeriodPickerShow, setTimePeriodPickerShow] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
   const { overlay } = Colors[useColorScheme()];
 
-  const handleDateChange = (e: DateTimePickerEvent, date?: Date) => {
-    setTimePeriodPickerShow(false);
-    if (!date) return;
-    const timePeriod = TIME_PERIOD.filter((timePeriod) =>
-      timePeriod.in(date)
-    )[0];
-    if (timePeriod) setTimePeriod(timePeriod);
-    if (timePeriod && props.onChange) props.onChange(timePeriod);
-  };
   return (
     <>
-      <Pressable onPress={() => setTimePeriodPickerShow(true)}>
+      <Pressable onPress={() => setOpen(true)}>
         <View style={[props.style]}>
           <Text style={[label]}>{props.label}</Text>
-          <View style={[input]}>
-            {timePeriod ? (
-              <Text style={[textCenter, roundedFull, padding, size1]}>
-                {timePeriod.toString()}
+          <View style={[input, row, justifyCenter]}>
+            {props.value ? (
+              <Text
+                style={[
+                  textCenter,
+                  roundedFull,
+                  padding,
+                  size1,
+                  marginHorizontal,
+                ]}
+              >
+                {props.value.toLocaleTimeString()}
               </Text>
             ) : (
               <Text
                 style={[
+                  padding,
                   textCenter,
                   borderDashed,
                   roundedFull,
                   opacity,
-                  padding,
                 ]}
               >
                 {props.label}
@@ -73,14 +67,17 @@ export default function DateSelector(props: {
         </View>
       </Pressable>
 
-      {timePeriodPickerShow && (
+      {open && (
         <DateTimePicker
-          testID="dateTimePicker"
           mode="time"
-          is24Hour={true}
           display="default"
-          value={new Date()}
-          onChange={handleDateChange}
+          minimumDate={new Date()}
+          value={props.value}
+          onChange={(e, d) => {
+            if (!d) return;
+            setOpen(false);
+            props.onChange && props.onChange(d);
+          }}
         ></DateTimePicker>
       )}
     </>

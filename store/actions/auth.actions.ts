@@ -4,6 +4,7 @@ import { axiosClient } from "../api/axiosClient";
 import { set as setAuth } from "../slices/auth.slice";
 import { CreateUserDto, LoginDto, UserType } from "../types";
 import { set as setUser } from "../slices/user.slice";
+import { USER_ROLE } from "../../enum/USER_ROLE";
 
 type AuthResponseType = {
   user: UserType;
@@ -26,7 +27,6 @@ export function register(dto: CreateUserDto) {
 
 export function login(dto: LoginDto) {
   return async (dispatch: AppDispatch) => {
-    console.log(dto);
     const authResponse = await axiosClient.post<any, AuthResponseType>(
       "/auth/login",
       { username: dto.email, password: dto.password }
@@ -46,7 +46,6 @@ export function reLogin(refreshToken: string) {
       "/auth/re-login"
     );
     const { user, accessToken } = authResponse;
-
     dispatch(setUser(user));
     dispatch(setAuth({ accessToken }));
   };

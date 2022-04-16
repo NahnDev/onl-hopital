@@ -3,9 +3,18 @@ import { PROCESS_STATUS } from "../../enum/PROCESS_ENUM";
 
 export type ProcessState = {
   CreateAppointment: { status: PROCESS_STATUS; message?: string };
+  LoadAppointment: { status: PROCESS_STATUS; message?: string };
+  CancelAppointment: { status: PROCESS_STATUS; message?: string };
+
+  CreateProfile: { status: PROCESS_STATUS; message?: string };
+  UpdateProfile: { status: PROCESS_STATUS; message?: string };
 };
 const initialState: ProcessState = {
   CreateAppointment: { status: PROCESS_STATUS.WAIT },
+  CreateProfile: { status: PROCESS_STATUS.WAIT },
+  UpdateProfile: { status: PROCESS_STATUS.WAIT },
+  LoadAppointment: { status: PROCESS_STATUS.WAIT },
+  CancelAppointment: { status: PROCESS_STATUS.WAIT },
 };
 
 export const processSlice = createSlice({
@@ -55,7 +64,7 @@ export const processSlice = createSlice({
       return {
         ...state,
         [action.payload.key]: {
-          status: PROCESS_STATUS.FAILURE,
+          status: PROCESS_STATUS.DOING,
           message: action.payload.message,
         },
       };

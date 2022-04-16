@@ -55,9 +55,11 @@ export default function Selector<T, K>(props: {
               <Text style={[padding, textCenter]}>{props.label}</Text>
             </View>
           ) : (
-            selected.map((item) =>
-              props.render(item, false, { style: [props.valueStyle] })
-            )
+            selected.map((item, key) => (
+              <View key={key}>
+                {props.render(item, false, { style: [props.valueStyle] })}
+              </View>
+            ))
           )}
         </Pressable>
         <BottomSheet
@@ -71,7 +73,9 @@ export default function Selector<T, K>(props: {
                 <Pressable
                   onPress={() => {
                     if (selected.includes(item)) {
-                      setSelected(selected.filter((value) => value !== item));
+                      if (props.multiple || selected.length > 1) {
+                        setSelected(selected.filter((value) => value !== item));
+                      }
                     } else {
                       console.log(props.multiple);
                       if (!props.multiple) {

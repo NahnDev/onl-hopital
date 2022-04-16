@@ -27,7 +27,6 @@ export default function ImagePicker(props: {
     margin,
   } = useStyles();
   const [uri, setUri] = useState(props.defaultUri);
-  console.log(uri);
   const handleClick = () => {
     if (props.disable) return;
     ExpoImagePicker.launchImageLibraryAsync({
@@ -52,9 +51,9 @@ export default function ImagePicker(props: {
           <Image
             source={{
               uri:
-                uri.indexOf("file") * uri.indexOf("http") > -1
-                  ? uri
-                  : `${BaseUrl}/${uri}`,
+                uri.indexOf("file") === -1 && uri.indexOf("http") === -1
+                  ? `${BaseUrl}/${uri}`
+                  : uri,
             }}
             style={[
               { height: 200, width: 150 },

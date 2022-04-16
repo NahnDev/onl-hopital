@@ -15,9 +15,9 @@ import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
 
 export default function DateSelector(props: {
-  value?: Date;
+  value: Date;
   label: string;
-  onChange?: (date: Date) => any;
+  onChange: (date: Date) => any;
   style?: StyleProp<ViewStyle>;
 }) {
   //#region style
@@ -29,13 +29,11 @@ export default function DateSelector(props: {
   //#endregion
 
   const { display, container } = useCusStyle();
-  const [date, setDate] = useState<Date | null | undefined>(props.value);
   const [datePickerShow, setDatePickerShow] = useState(false);
   const { overlay } = Colors[useColorScheme()];
 
   const handleDateChange = (e: DateTimePickerEvent, date?: Date) => {
     setDatePickerShow(false);
-    if (date) setDate(date);
     if (date && props.onChange) props.onChange(date);
   };
   return (
@@ -44,9 +42,9 @@ export default function DateSelector(props: {
         <View style={[props.style]}>
           <Text style={[label]}>{props.label}</Text>
           <View style={[input]}>
-            {date ? (
+            {props.value ? (
               <Text style={[textCenter, roundedFull, padding, size1]}>
-                {date.toLocaleDateString("vi-VN", {
+                {props.value.toLocaleDateString("vi-VN", {
                   dateStyle: "long",
                 })}
               </Text>
@@ -71,9 +69,10 @@ export default function DateSelector(props: {
         <DateTimePicker
           testID="dateTimePicker"
           mode="date"
+          minimumDate={new Date()}
           is24Hour={true}
           display="default"
-          value={date || new Date()}
+          value={props.value}
           onChange={handleDateChange}
         ></DateTimePicker>
       )}

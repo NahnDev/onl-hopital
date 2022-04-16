@@ -11,28 +11,18 @@ import useImagePicker from "../hooks/useImagePicker";
 import uploadAvatar from "../store/actions/user.actions";
 import { BaseUrl } from "../constants/BaseUrl";
 import ImagePicker from "../components/ImagePicker";
+import useNotification from "../hooks/useNotification";
 
 export default function MenuScreen() {
-  const {
-    screen,
-    header,
-    content,
-    itemCenter: alignCenter,
-    flex,
-    justifyCenter,
-    transparent,
-    shadow,
-    text,
-    textReverse: text_reverse,
-    marginHorizontal,
-    padding,
-    marginVertical,
-    roundedFull: roundFull,
-    opacity,
-  } = useStyles();
+  const { marginHorizontal, padding, marginVertical } = useStyles();
+  const { screen, header, content } = useStyles();
+  const { itemCenter, flex, justifyCenter } = useStyles();
+  const { transparent, opacity, shadow, roundedFull, rounded } = useStyles();
+  const { text, textReverse } = useStyles();
   const colorSchema = useColorScheme();
-  const user = useSelector<RootState, UserState>((state) => state.user);
+  const { background } = Colors[colorSchema];
 
+  const user = useSelector<RootState, UserState>((state) => state.user);
   return (
     <View style={[screen]}>
       <View style={[header, { alignItems: "stretch" }]}>
@@ -40,7 +30,7 @@ export default function MenuScreen() {
           <UserAvatar uri={user.avatar} _id={user._id}></UserAvatar>
           <ListItem.Content>
             <ListItem.Title>
-              <Text h4 style={[text_reverse]}>
+              <Text h4 style={[textReverse]}>
                 {user.name}
               </Text>
             </ListItem.Title>
@@ -51,8 +41,8 @@ export default function MenuScreen() {
         <View style={[marginVertical]}>
           <Button
             titleStyle={[marginHorizontal, text]}
-            containerStyle={[roundFull]}
-            buttonStyle={[transparent, padding, roundFull]}
+            containerStyle={[roundedFull]}
+            buttonStyle={[transparent, padding, roundedFull]}
             iconPosition="left"
             icon={{
               name: "lock",
@@ -65,13 +55,17 @@ export default function MenuScreen() {
         <View style={[marginVertical]}>
           <Button
             titleStyle={[marginHorizontal]}
-            containerStyle={[roundFull]}
-            buttonStyle={[{ backgroundColor: "orangered" }, padding, roundFull]}
+            containerStyle={[roundedFull]}
+            buttonStyle={[
+              { backgroundColor: "orangered" },
+              padding,
+              roundedFull,
+            ]}
             iconPosition="right"
             icon={{
               name: "arrow-right",
               type: "font-awesome",
-              color: text_reverse.color,
+              color: background,
             }}
             title="Logout application"
           ></Button>

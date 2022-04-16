@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Pressable, Modal, ScrollView } from "react-native";
 import { useStyles } from "../style";
 import {
@@ -15,9 +15,10 @@ import Colors from "../constants/Colors";
 import ProfileItem from "../components/profile/ProfileItem";
 import { ProfileType } from "../store/types";
 import ProfileDetail from "../components/profile/ProfileDetail";
-import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 import ProfileForm from "../components/profile/ProfileForm";
+import ProfileActions from "../store/actions/profile.actions";
 
 export default function ProfileScreen() {
   const { screen, transparent, header, content } = useStyles();
@@ -27,6 +28,11 @@ export default function ProfileScreen() {
   const profiles = useSelector<RootState, ProfileType[]>((state) =>
     Object.keys(state.profiles).map((key) => state.profiles[key])
   );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(ProfileActions.load());
+  }, []);
+
   const [focusItem, setFocusItem] = useState<ProfileType | null>(null);
   const [formVisible, setFormVisible] = useState<boolean>(false);
   const handleCreate = () => {

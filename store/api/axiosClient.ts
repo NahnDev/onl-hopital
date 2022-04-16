@@ -9,12 +9,11 @@ export const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config) => {
+  console.log("Call api");
+
   store.dispatch(wait());
   const accessToken = await AsyncStorage.getItem("@access_token");
-  console.log(accessToken);
-
   if (accessToken) {
-    console.log("Set auth");
     config.headers = { Authorization: `Bearer ${accessToken}` };
   }
   return config;

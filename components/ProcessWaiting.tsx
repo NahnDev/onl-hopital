@@ -13,7 +13,7 @@ export default function ProcessWaiting(props: {
   const { justifyCenter, itemCenter: alignCenter, textCenter } = useStyles();
   const { padding, margin } = useStyles();
   const { tint } = Colors[useColorScheme()];
-  return (
+  return props.visible ? (
     <Modal visible={props.visible} animationType="fade" transparent>
       <View
         style={[
@@ -37,5 +37,7 @@ export default function ProcessWaiting(props: {
         </View>
       </View>
     </Modal>
+  ) : (
+    <></>
   );
 }
