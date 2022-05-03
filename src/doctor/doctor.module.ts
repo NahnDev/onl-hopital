@@ -3,6 +3,8 @@ import { DoctorService } from './doctor.service';
 import { DoctorController } from './doctor.controller';
 import { Doctor, DoctorSchema } from './schemas/doctor.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { WorkingService } from './working.service';
+import { Working, WorkingSchema } from './schemas/woking.schema';
 
 @Module({
   imports: [
@@ -17,9 +19,16 @@ import { MongooseModule } from '@nestjs/mongoose';
           return schema;
         },
       },
+      {
+        name: Working.name,
+        useFactory: () => {
+          return WorkingSchema;
+        },
+      },
     ]),
   ],
   controllers: [DoctorController],
-  providers: [DoctorService],
+  providers: [DoctorService, WorkingService],
+  exports: [WorkingService],
 })
 export class DoctorModule {}

@@ -3,6 +3,7 @@ import { AppointmentService } from './appointment.service';
 import { AppointmentController } from './appointment.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './schemas/appointment.schema';
+import { DoctorModule } from 'src/doctor/doctor.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { Appointment, AppointmentSchema } from './schemas/appointment.schema';
         },
       },
     ]),
+    DoctorModule,
   ],
   controllers: [AppointmentController],
   providers: [AppointmentService],

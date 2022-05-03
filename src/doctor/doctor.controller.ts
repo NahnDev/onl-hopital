@@ -6,16 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AppointmentService } from 'src/appointment/appointment.service';
 import { DoctorService } from './doctor.service';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { WorkingService } from './working.service';
 
 @Controller('doctor')
 @ApiBearerAuth()
 export class DoctorController {
-  constructor(private readonly doctorService: DoctorService) {}
+  constructor(
+    private readonly doctorService: DoctorService,
+    private readonly workingService: WorkingService,
+  ) {}
 
   @Post()
   create(@Body() createDoctorDto: CreateDoctorDto) {
@@ -40,5 +46,10 @@ export class DoctorController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.doctorService.remove(id);
+  }
+
+  @Get(':id/free-times')
+  getFreeTimes(@Param('id') id: string, @Query('date') date: string) {
+    return this.workingService.getFreeTimes(id, Number(date));
   }
 }
