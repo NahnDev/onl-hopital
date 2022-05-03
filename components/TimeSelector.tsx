@@ -13,15 +13,17 @@ import { Input, InputProps, Text } from "@rneui/base";
 import { useStyles } from "../style";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from "../constants/Colors";
+import Selector from "./Selector";
+import { valid } from "joi";
 
-const WORK_TIME = {
-  start: 8,
-  end: 17,
-  skip: [12],
+const WORK_TIME: { start: number; end: number; skip: number[] } = {
+  start: 9,
+  end: 19,
+  skip: [],
 };
 
-function validTime(d: Date) {
-  const hour = d.getHours();
+function validTime(t: number) {
+  const hour = t;
   return !(
     hour < WORK_TIME.start ||
     hour >= WORK_TIME.end ||
@@ -30,11 +32,12 @@ function validTime(d: Date) {
 }
 
 export default function TimeSelector(props: {
-  value: Date;
+  value?: number;
   error?: boolean;
+  inValid: number[];
   onError?: (error: string) => any;
   label: string;
-  onChange?: (date: Date) => any;
+  onChange?: (time: number) => any;
   style?: StyleProp<ViewStyle>;
 }) {
   //#region style
@@ -48,84 +51,48 @@ export default function TimeSelector(props: {
   const { display, container } = useCusStyle();
   const [open, setOpen] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const { overlay, warning } = Colors[useColorScheme()];
+  const { overlay, warning, background, text } = Colors[useColorScheme()];
   const [time, setTime] = useState(props.value);
-  const handleChangeTime = (t: Date) => {
+  const handleChangeTime = (t: number) => {
     setTime(t);
     props.onChange && props.onChange(t);
   };
   useEffect(() => {
     setError(false);
-    if (!validTime(time)) setError(true);
+    if (time && !validTime(time)) setError(true);
   }, [time, props.value]);
 
   return (
-    <>
-      <Pressable onPress={() => setOpen(true)}>
-        <View style={[props.style]}>
-          <Text style={[label]}>{props.label}</Text>
-          <View
-            style={[
-              input,
-              row,
-              justifyCenter,
-              (props.error || error) && { borderColor: warning },
-            ]}
-          >
-            {props.value ? (
-              <Text
-                style={[
-                  textCenter,
-                  roundedFull,
-                  padding,
-                  size1,
-                  marginHorizontal,
-                ]}
-              >
-                {props.value.toLocaleTimeString()}
-              </Text>
-            ) : (
-              <Text
-                style={[
-                  padding,
-                  textCenter,
-                  borderDashed,
-                  roundedFull,
-                  opacity,
-                ]}
-              >
-                {props.label}
-              </Text>
-            )}
-          </View>
-          {error && (
-            <Text style={[{ color: warning }, margin]}>
-              Chúng tôi làm việc từ {WORK_TIME.start} giờ đến {WORK_TIME.end}{" "}
-              giờ, nghỉ giải lao vào lúc{" "}
-              {WORK_TIME.skip.map((h, index) => (
-                <Text style={{ color: warning }} key={index}>
-                  {h} giờ,
-                </Text>
-              ))}{" "}
-            </Text>
-          )}
-        </View>
-      </Pressable>
+    <Selector
+      label="Thoi gian"
+      source={[9, 10, 11, 12, 13, 14, 15, 16, 17, 18]}
+      onChange={(items) => {
+        handleChangeTime(items[0]);
+      }}
+      disableItems={props.inValid}
+      render={(item, selected) => (
+        <View
+          style={[
+            padding,
+            margin,
+            roundedFull,
 
-      {open && (
-        <DateTimePicker
-          mode="time"
-          display="default"
-          minimumDate={new Date()}
-          value={time}
-          onChange={(e, d) => {
-            setOpen(false);
-            if (!d) return;
-            handleChangeTime(d);
-          }}
-        ></DateTimePicker>
+            {
+              opacity: props.inValid.includes(item) ? 0.5 : 1,
+              backgroundColor: props.inValid.includes(item)
+                ? "#888"
+                : selected
+                ? "#088"
+                : "#888",
+            },
+          ]}
+        >
+          <Text
+            style={[textCenter, bold, size1, { color: background }]}
+          >{`${item}:00 - ${item + 1}:00`}</Text>
+        </View>
       )}
-    </>
+    ></Selector>
   );
 }
 

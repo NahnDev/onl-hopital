@@ -63,10 +63,12 @@ export default function AppointmentDetail(props: {
         <Text h4>Thời gian</Text>
         <View style={[row]}>
           <Text h4 style={[bold, margin]}>
-            {new Date(appointment.time).toLocaleTimeString().substring(0, 5)}
+            {`${props.info.time}:00 - ${props.info.time + 1}:00`}
           </Text>
           <Text h4 style={[bold, margin]}>
-            {new Date(appointment.time).toLocaleDateString()}
+            {new Date(props.info.date).toLocaleDateString("vi-VN", {
+              timeStyle: "full",
+            })}
           </Text>
         </View>
       </View>
@@ -125,7 +127,8 @@ export default function AppointmentDetail(props: {
   );
 }
 const initial: CreateAppointmentDto = {
-  time: new Date().getTime(),
+  date: new Date().getTime(),
+  time: 9,
   note: "",
   profile: "",
   doctor: "",

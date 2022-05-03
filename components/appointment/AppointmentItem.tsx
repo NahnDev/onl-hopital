@@ -15,14 +15,15 @@ export default function AppointmentItem(props: { info: BookingType }) {
   const { textCenter, bold } = useStyles();
   const {} = Colors[useColorScheme()];
   const { container, timeLine, contentTime, contentInfo } = useCusStyle();
+  console.log("===============");
   return (
     <ListItem.Swipeable disabled containerStyle={[]}>
       <ListItem.Content style={[contentTime, itemCenter]}>
         <Text style={[timeLine, bold]}>
-          {new Date(props.info.time).toLocaleTimeString().substring(0, 5)}
+          {`${props.info.time}:00 - ${props.info.time + 1}:00`}
         </Text>
-        <Text style={[timeLine, bold]}>
-          {new Date(props.info.time).toLocaleDateString("vi-VN", {
+        <Text style={[timeLine, bold, { fontSize: 18 }]}>
+          {new Date(props.info.date).toLocaleDateString("vi-VN", {
             timeStyle: "full",
           })}
         </Text>

@@ -67,6 +67,7 @@ export type HistoryType = {
 // book define
 export type BookingType = {
   _id: string;
+  date: number;
   time: number;
   note?: string;
 
@@ -75,7 +76,10 @@ export type BookingType = {
   services: ServiceType[];
 };
 // export type BookingRef = Pick<BookingType, "_id">;
-export type CreateAppointmentDto = Pick<BookingType, "time" | "note"> & {
+export type CreateAppointmentDto = Pick<
+  BookingType,
+  "date" | "time" | "note"
+> & {
   profile: string;
   services: string[];
   doctor: string;

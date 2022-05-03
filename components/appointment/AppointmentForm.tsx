@@ -35,6 +35,7 @@ import TimeSelector from "../TimeSelector";
 import ProfileActions from "../../store/actions/profile.actions";
 import ActionFallback from "../ActionResultUI/ActionResult";
 import useNotification from "../../hooks/useNotification";
+import { axiosClient } from "../../store/api/axiosClient";
 
 export default function AppointmentForm() {
   //#region style
@@ -76,6 +77,16 @@ export default function AppointmentForm() {
   }, []);
 
   const [appointment, setAppointment] = useState<CreateAppointmentDto>(initial);
+  const [freeTimes, setFreeTimes] = useState<number[]>([]);
+  useEffect(() => {
+    if (!appointment.date || !appointment.doctor) return;
+    axiosClient
+      .get<any, number[]>(`/doctor/${appointment.doctor}/free-times`, {
+        params: { date: appointment.date },
+      })
+      .then((freeTimes) => setFreeTimes(freeTimes));
+  }, [appointment.date, appointment.doctor]);
+
   const { status: pStatus, reset } = useProcess("CreateAppointment");
   const [rangeDateError, setRangeDateError] = useState<boolean>(false);
   const { push } = useNotification();
@@ -92,6 +103,7 @@ export default function AppointmentForm() {
   // Handle notification -------------------------------
   const handleUpdate = function (v: Partial<CreateAppointmentDto>) {
     setAppointment({ ...appointment, ...v });
+    console.log(v);
   };
   const pushNotification = () => {
     push({
@@ -100,16 +112,18 @@ export default function AppointmentForm() {
       },
       trigger: { seconds: 5 },
     });
+    const apTime = new Date(appointment.date);
+    apTime.setHours(appointment.time);
     push({
       content: {
         title: "Bạn có một lịch hẹn khám bệnh gần đến!",
         color: "teal",
         body:
-          `${new Date(appointment.time).toLocaleDateString()} ` +
-          `${new Date(appointment.time).toLocaleTimeString()}`,
+          `${new Date(appointment.date).toLocaleDateString()} ` +
+          `${appointment.time}:00 - ${appointment.time + 1}:00`,
       },
       trigger: {
-        date: Math.max(appointment.time - 10 * 60 * 1000, Date.now()),
+        date: Math.max(apTime.getTime() - 10 * 60 * 1000, Date.now()),
       },
     });
   };
@@ -117,14 +131,14 @@ export default function AppointmentForm() {
     console.log(appointment);
     dispatch(AppointmentActions.create(appointment));
   };
-  const handleUpdateDate = (d: Date) => {
-    if (d.getTime() > Date.now()) {
-      setRangeDateError(false);
-    } else {
-      setRangeDateError(true);
-    }
-    handleUpdate({ time: d.getTime() });
-  };
+  // const handleUpdateDate = (d: Date) => {
+  //   if (d.getTime() > Date.now()) {
+  //     setRangeDateError(false);
+  //   } else {
+  //     setRangeDateError(true);
+  //   }
+  //   handleUpdate({ time: d.getTime() });
+  // };
 
   return (
     <View style={[screen]}>
@@ -185,19 +199,20 @@ export default function AppointmentForm() {
           <DateSelector
             label="Chon ngay "
             error={rangeDateError}
-            value={new Date(appointment.time)}
+            value={new Date(appointment.date)}
             onChange={(date) => {
-              const d = new Date(appointment.time);
-              d.setFullYear(
-                date.getFullYear(),
-                date.getMonth(),
-                date.getDate()
-              );
-              handleUpdateDate(new Date(d));
+              handleUpdate({ date: date.getTime() });
+              // const d = new Date(appointment.time);
+              // d.setFullYear(
+              //   date.getFullYear(),
+              //   date.getMonth(),
+              //   date.getDate()
+              // );
+              // handleUpdateDate(new Date(d));
             }}
             style={[marginVertical]}
           ></DateSelector>
-          <TimeSelector
+          {/* <TimeSelector
             label="Thoi gian"
             error={rangeDateError}
             value={new Date(appointment.time)}
@@ -207,6 +222,22 @@ export default function AppointmentForm() {
               d.setMinutes(date.getMinutes());
               handleUpdateDate(new Date(d));
             }}
+            style={[marginVertical]}
+          ></TimeSelector> */}
+          <TimeSelector
+            label="Thoi gian"
+            error={rangeDateError}
+            // value={appointment.time}
+            onChange={(t) => {
+              handleUpdate({ time: t });
+            }}
+            inValid={[9, 10, 11, 12, 13, 14, 15, 16, 17, 18].reduce<number[]>(
+              (value, item) => {
+                if (freeTimes.includes(item)) return value;
+                return [...value, item];
+              },
+              []
+            )}
             style={[marginVertical]}
           ></TimeSelector>
 
@@ -265,7 +296,8 @@ export default function AppointmentForm() {
   );
 }
 const initial: CreateAppointmentDto = {
-  time: new Date().getTime() + 30 * 60 * 1000,
+  date: new Date().getTime(),
+  time: new Date().getHours() + 1,
   note: "",
   profile: "",
   doctor: "",

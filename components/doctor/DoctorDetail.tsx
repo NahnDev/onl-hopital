@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Pressable, ScrollView } from "react-native";
 import {
   Button,
@@ -16,6 +16,8 @@ import useColorScheme from "../../hooks/useColorScheme";
 import Colors from "../../constants/Colors";
 import DoctorItem from "./DoctorItem";
 import GoBack from "../GoBack";
+import DateSelector from "../DateSelector";
+import { axiosClient } from "../../store/api/axiosClient";
 
 export default function DoctorDetail(props: {
   info: DoctorType;
@@ -40,7 +42,18 @@ export default function DoctorDetail(props: {
     justifyStart,
     itemStart: alignStart,
   } = useStyles();
+  const { tint, background, warning } = Colors[useColorScheme()];
   const { image, backIcon, imageBox, item } = useCusStyle();
+  const [date, setDate] = useState<number>(new Date().getTime());
+  const [freeTimes, setFreeTimes] = useState<number[]>([]);
+  useEffect(() => {
+    if (!props.info._id && !date) return;
+    axiosClient
+      .get<any, number[]>(`/doctor/${props.info._id}/free-times`, {
+        params: { date },
+      })
+      .then((freeTimes) => setFreeTimes(freeTimes));
+  }, [props.info._id, date]);
   return (
     <View style={[screen, { margin: -10 }]}>
       <GoBack onPress={() => props.onBackdropPress()}></GoBack>
@@ -103,6 +116,80 @@ export default function DoctorDetail(props: {
             </ListItem.Content>
           </ListItem>
         </View>
+
+        <View style={[margin, padding]}>
+          <Text h4>Lich lam viec</Text>
+          <DateSelector
+            label="Chon ngay"
+            onChange={(date) => {
+              setDate(date.getTime());
+            }}
+            value={new Date(date)}
+          ></DateSelector>
+          <View style={{ display: "flex", flexDirection: "row", margin: 10 }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  height: 20,
+                  width: 20,
+                  backgroundColor: tint,
+                  marginHorizontal: 20,
+                }}
+              ></View>
+              <Text>Chua co lich hen</Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <View
+                style={{
+                  height: 20,
+                  width: 20,
+                  backgroundColor: warning,
+                  marginHorizontal: 20,
+                }}
+              ></View>
+              <Text> Da co lich hen</Text>
+            </View>
+          </View>
+          {[9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((time, idx) => {
+            return (
+              <View
+                key={idx}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <Text>{`${time}:00 - ${time + 1}:00`}</Text>
+                <View
+                  style={[
+                    padding,
+                    margin,
+                    {
+                      width: "70%",
+                    },
+                    {
+                      backgroundColor: freeTimes.includes(time)
+                        ? tint
+                        : warning,
+                    },
+                  ]}
+                ></View>
+              </View>
+            );
+          })}
+        </View>
+        <View style={{ height: 200 }}></View>
       </ScrollView>
     </View>
   );

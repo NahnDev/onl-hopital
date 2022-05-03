@@ -24,14 +24,13 @@ export default function BookingScreen() {
   const appointments = useSelector<RootState, BookingType[]>((state) =>
     Object.keys(state.appointments)
       .map((key) => state.appointments[key])
-      .filter((item) => item.time > Date.now())
       .sort((a, b) => a.time - b.time)
   );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(AppointmentActions.load());
   }, []);
-
+  console.log(appointments.length);
   const navigation = useNavigation();
   const [focus, setFocus] = useState<BookingType | null>(null);
   return (

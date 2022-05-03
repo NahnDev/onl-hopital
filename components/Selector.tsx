@@ -17,6 +17,7 @@ export default function Selector<T, K>(props: {
     props?: { style: StyleProp<ViewStyle> }
   ) => React.ReactNode;
 
+  disableItems?: T[];
   multiple?: boolean;
   nonRequired?: boolean;
   onError?: (error: string) => any;
@@ -82,6 +83,8 @@ export default function Selector<T, K>(props: {
               return (
                 <Pressable
                   onPress={() => {
+                    if (props.disableItems && props.disableItems.includes(item))
+                      return;
                     if (selected.includes(item)) {
                       if (props.multiple || selected.length > 1) {
                         setSelected(selected.filter((value) => value !== item));
