@@ -7,6 +7,8 @@ import { Profile } from 'src/profile/schemas/profile.schema';
 import { Doctor } from 'src/doctor/schemas/doctor.schema';
 import { Service } from 'src/service/schemas/service.schema';
 
+const startWorking = 9;
+const endWorking = 19;
 @Schema()
 export class Appointment {
   @ApiProperty()
@@ -15,6 +17,10 @@ export class Appointment {
 
   @ApiProperty()
   @Prop({ type: Number, required: true })
+  date: number;
+
+  @ApiProperty()
+  @Prop({ type: Number, required: true, min: startWorking, max: endWorking })
   time: number;
 
   @ApiProperty()

@@ -22,7 +22,11 @@ export class AppointmentService {
     return (
       await this.apModel.find({
         ...filter,
-        time: { $gt: Date.now() - 60 * 60 * 1000 },
+        date: {
+          $gt:
+            Math.floor(Date.now() / (24 * 60 * 60 * 1000)) *
+            (24 * 60 * 60 * 1000),
+        },
       })
     ).map((doc) => doc.toJSON());
   }
