@@ -31,8 +31,11 @@ export const userSlice = createSlice({
     ) {
       return { ...state, ...action.payload };
     },
+    clear(){
+      return initialState
+    }
   },
 });
 
 export const userReducer = userSlice.reducer;
-export const { set, update } = userSlice.actions;
+export const { set, update, clear } = userSlice.actions;

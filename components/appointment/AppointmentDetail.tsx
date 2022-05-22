@@ -55,7 +55,7 @@ export default function AppointmentDetail(props: {
   const handleCancel = function () {
     dispatch(AppointmentActions.cancel(appointment._id));
   };
-
+  console.log(pStatus.status)
   return (
     <View style={[screen]}>
       <View style={[header]}>
@@ -109,7 +109,6 @@ export default function AppointmentDetail(props: {
             editable={false}
           ></Input>
           <Button
-            disabled={pStatus.status === PROCESS_STATUS.WAIT}
             title="Hủy lịch"
             buttonStyle={[padding, roundedFull, { backgroundColor: "red" }]}
             onPress={handleCancel}

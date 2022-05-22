@@ -12,6 +12,8 @@ import uploadAvatar from "../store/actions/user.actions";
 import { BaseUrl } from "../constants/BaseUrl";
 import ImagePicker from "../components/ImagePicker";
 import useNotification from "../hooks/useNotification";
+import { logout } from "../store/actions/auth.actions";
+import { useNavigation } from "@react-navigation/native";
 
 export default function MenuScreen() {
   const { marginHorizontal, padding, marginVertical } = useStyles();
@@ -22,13 +24,19 @@ export default function MenuScreen() {
   const colorSchema = useColorScheme();
   const { background } = Colors[colorSchema];
 
-  const handleLogout = () => {};
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const handleLogout = () => {
+    dispatch(logout())
+    navigation.navigate("Login")
+
+  };
   const user = useSelector<RootState, UserState>((state) => state.user);
   return (
     <View style={[screen]}>
       <View style={[header, { alignItems: "stretch" }]}>
         <ListItem containerStyle={[transparent]}>
-          <UserAvatar uri={user.avatar} _id={user._id}></UserAvatar>
+          {/* <UserAvatar uri={user.avatar} _id={user._id}></UserAvatar> */}
           <ListItem.Content>
             <ListItem.Title>
               <Text h4 style={[textReverse]}>

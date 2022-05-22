@@ -3,7 +3,7 @@ import { BaseUrl } from "../../constants/BaseUrl";
 import { axiosClient } from "../api/axiosClient";
 import { set as setAuth, clear as clearAuth } from "../slices/auth.slice";
 import { CreateUserDto, LoginDto, UserType } from "../types";
-import { set as setUser } from "../slices/user.slice";
+import { set as setUser, clear as clearUser } from "../slices/user.slice";
 import { USER_ROLE } from "../../enum/USER_ROLE";
 import ProcessActions from "./process.actions";
 
@@ -14,9 +14,10 @@ type AuthResponseType = {
 
 export function register(dto: CreateUserDto) {
   return async (dispatch: AppDispatch) => {
+    console.log({...dto, avatar: ""})
     const authResponse = await axiosClient.post<any, AuthResponseType>(
       "/auth/register",
-      dto
+      {...dto, avatar: ""}
     );
     console.log(authResponse);
     const { user, accessToken } = authResponse;
@@ -42,6 +43,7 @@ export function login(dto: LoginDto) {
 export function logout() {
   return async (dispatch: AppDispatch) => {
     dispatch(clearAuth(""));
+    dispatch(clearUser())
   };
 }
 

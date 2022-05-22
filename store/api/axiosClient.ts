@@ -26,6 +26,7 @@ axiosClient.interceptors.response.use(
   },
   function (error) {
     store.dispatch(complete());
+    console.log(error?.message)
     throw error;
   }
 );
